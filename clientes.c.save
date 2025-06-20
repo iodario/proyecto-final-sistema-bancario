@@ -364,7 +364,7 @@ void listarClientes() {
     while (fread(&c, sizeof(stCliente), 1, f)) {
         if (c.eliminado == 0) {       // Si el cliente no está eliminado (es decir, está activo)
             printf("ID:%d | Nro:%d | %s %s | DNI:%s | Email:%s\n",
-                   c.id, c.nroCliente, c.nombre, c.apellido, c.dni, c.email);
+                   c.id, c.nroCliente, c.nombre, c.apellido, c.dni, c.);
             hay = 1;
         }
     }
