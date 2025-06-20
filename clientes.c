@@ -206,84 +206,58 @@ int camposObligatoriosCompletos(stCliente c) {
     return 1; // Todos los campos obligatorios están completos
 }
 
+void leerCampoObligatorio(char* destino, int maxLen, const char* etiqueta) {
+    //destino = dónde se va a guardar lo que el usuario escribe (el campo real del cliente)
+    //maxLen = cantidad máxima de caracteres permitidos (por seguridad y tamaño de campo)
+    //etiqueta = el nombre del campo que se va a mostrar al usuario (ej: "Nombre", "Email")
+    do {
+        printf("%s: ", etiqueta);
+        fgets(destino, maxLen, stdin);
+        destino[strcspn(destino, "\n")] = 0;
+
+        if (strlen(destino) == 0) {
+            printf("El campo \"%s\" no puede estar vacío.\n", etiqueta);
+        }
+        fflush(stdin); //limpia buffer de entrada
+    } while (strlen(destino) == 0);
+}
+
 
 void leerDatosCliente(stCliente* c, FILE* f) {
+    leerCampoObligatorio(c->nombre, 30, "Nombre");
+    leerCampoObligatorio(c->apellido, 30, "Apellido");
+
+    // === Email con validación adicional de @ ===
     do {
-        // Solicita los campos obligatorios
-        printf("Nombre: ");
-        fgets(c->nombre, 30, stdin);
-        c->nombre[strcspn(c->nombre, "\n")] = 0;
-
-        printf("Apellido: ");
-        fgets(c->apellido, 30, stdin);
-        c->apellido[strcspn(c->apellido, "\n")] = 0;
-
-        do {
-            printf("Email: ");
-            fgets(c->email, 30, stdin);
-            c->email[strcspn(c->email, "\n")] = 0;
-
-            if (strlen(c->email) == 0) {
-                printf("El email no puede estar vacío. Intente nuevamente.\n");
-            } else if (!emailValido(c->email)) {
-                printf("El email debe contener un '@'. Intente nuevamente.\n");
-                c->email[0] = '\0';  // Lo limpia para que vuelva a entrar al bucle
-            }
-        } while (strlen(c->email) == 0);
-
-        if (!camposObligatoriosCompletos(*c)) {
-            printf("Por favor complete todos los campos obligatorios.\n\n");
+        leerCampoObligatorio(c->email, 30, "Email");
+        if (!emailValido(c->email)) {
+            printf("El email debe contener un '@'. Intente nuevamente.\n");
+            c->email[0] = '\0';
         }
+    } while (strlen(c->email) == 0);
 
-    } while (!camposObligatoriosCompletos(*c));
-
-    // === DNI (ya validado como numérico y no repetido) ===
+    // === DNI con validaciones especiales ===
     do {
-        printf("DNI: ");
-        fgets(c->dni, 10, stdin);
-        c->dni[strcspn(c->dni, "\n")] = 0;
+        leerCampoObligatorio(c->dni, 10, "DNI");
 
         if (!esNumerico(c->dni)) {
-            printf("El DNI debe ser numérico. Intente nuevamente.\n");
-            continue;
-        }
-
-        if (dniExiste(f, c->dni)) {
-            printf("Ya existe un cliente con ese DNI. Intente nuevamente.\n");
+            printf("El DNI debe ser numérico.\n");
+        } else if (dniExiste(f, c->dni)) {
+            printf("Ya existe un cliente con ese DNI.\n");
+        } else if (strlen(c->dni) < 7 || strlen(c->dni) > 8) {
+            printf("El DNI debe tener entre 7 y 8 dígitos.\n");
         } else {
             break;
         }
-
     } while (1);
 
-    // === Datos opcionales ===
-    printf("Calle: ");
-    fgets(c->domicilio.calle, 30, stdin);
-    c->domicilio.calle[strcspn(c->domicilio.calle, "\n")] = 0;
-
-    printf("Nro: ");
-    fgets(c->domicilio.nro, 6, stdin);
-    c->domicilio.nro[strcspn(c->domicilio.nro, "\n")] = 0;
-
-    printf("Localidad: ");
-    fgets(c->domicilio.localidad, 50, stdin);
-    c->domicilio.localidad[strcspn(c->domicilio.localidad, "\n")] = 0;
-
-    printf("Provincia: ");
-    fgets(c->domicilio.provincia, 40, stdin);
-    c->domicilio.provincia[strcspn(c->domicilio.provincia, "\n")] = 0;
-
-    printf("Código Postal: ");
-    fgets(c->domicilio.cpos, 6, stdin);
-    c->domicilio.cpos[strcspn(c->domicilio.cpos, "\n")] = 0;
-
-    printf("Teléfono Fijo: ");
-    fgets(c->telefonoFijo, 12, stdin);
-    c->telefonoFijo[strcspn(c->telefonoFijo, "\n")] = 0;
-
-    printf("Teléfono Móvil: ");
-    fgets(c->telefonoMovil, 12, stdin);
-    c->telefonoMovil[strcspn(c->telefonoMovil, "\n")] = 0;
+    leerCampoObligatorio(c->domicilio.calle,     30, "Calle");
+    leerCampoObligatorio(c->domicilio.nro,        6, "Nro");
+    leerCampoObligatorio(c->domicilio.localidad, 50, "Localidad");
+    leerCampoObligatorio(c->domicilio.provincia, 40, "Provincia");
+    leerCampoObligatorio(c->domicilio.cpos,       6, "Código Postal");
+    leerCampoObligatorio(c->telefonoFijo,        12, "Teléfono Fijo");
+    leerCampoObligatorio(c->telefonoMovil,       12, "Teléfono Móvil");
 }
 
 
@@ -379,7 +353,7 @@ void listarClientes() {
 
     FILE* f = fopen(ARCH_CLIENTES, "rb");
     if (!f) {
-        printf("Error al abrir archivo de clientes.\n");
+        printf("Error al abrir archivo de clientes. No hay datos\n");
         esperaTecla();
         return;
     }
