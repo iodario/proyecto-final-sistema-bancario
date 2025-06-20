@@ -1,0 +1,29 @@
+# Archivos binarios y de compilación
+*.exe
+*.o
+*.out
+*.obj
+*.gch
+
+# Carpetas generadas por Code::Blocks
+bin/
+obj/
+
+# Archivos auxiliares de Code::Blocks
+*.depend
+*.layout
+*.layout.save
+*.cbp.*
+
+# Archivos temporales y de backup
+*~
+*.bak
+*.swp
+*.autosave
+
+# Archivos del sistema (solo Windows)
+Thumbs.db
+desktop.ini
+
+# Archivos de datos de prueba
+*.dat
