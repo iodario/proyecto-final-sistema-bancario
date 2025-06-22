@@ -36,7 +36,8 @@ typedef struct {
 void menuClientes();
 void altaCliente();
 int  dniExiste(FILE* f, const char* dni);
-void leerCampoObligatorio(char* destino, int maxLen, const char* etiqueta) 
+int emailExiste(char nombreArchivo[], char email[]);
+void leerCampoObligatorio(char* destino, int maxLen, const char* etiqueta);
 void leerDatosCliente(stCliente* c, FILE* f);
 
 void bajaCliente();
