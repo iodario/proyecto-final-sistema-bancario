@@ -9,6 +9,7 @@
 
 #include "clientes.h"
 #include "cuentas.h"
+#include "movimientos.h"
 
 
 

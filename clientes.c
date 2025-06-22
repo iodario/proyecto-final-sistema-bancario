@@ -1,7 +1,7 @@
 #include "clientes.h"
 #include "interfaz.h"
 #include "utils.h"
-
+#define MAX_STR 100
 //============================MENU=============================
 void menuClientes() {
     limpiarPantalla();
@@ -81,6 +81,23 @@ int dniExiste(FILE* f, const char* dni) {
 }
 
 /** DARIO TURCHI **/
+int emailExiste(char nombreArchivo[], char email[]) {
+    FILE* f = fopen(nombreArchivo, "rb");
+    stCliente aux;
+
+    if (f) {
+        while (fread(&aux, sizeof(stCliente), 1, f)) {
+            if (aux.eliminado == 0 && strcmp(aux.email, email) == 0) {
+                fclose(f);
+                return 1; // Email duplicado
+            }
+        }
+        fclose(f);
+    }
+    return 0; // No encontrado o archivo inválido
+}
+
+/** DARIO TURCHI **/
 void leerCampoObligatorio(char* destino, int maxLen, const char* etiqueta) {
     //destino = dónde se va a guardar lo que el usuario escribe
     //maxLen = cantidad máxima de caracteres permitidos
@@ -104,13 +121,19 @@ void leerDatosCliente(stCliente* c, FILE* f) {
     leerCampoObligatorio(c->nombre, 30, "Nombre");
     leerCampoObligatorio(c->apellido, 30, "Apellido");
 
+
     do {
         leerCampoObligatorio(c->email, 30, "Email");
+
         if (!emailValido(c->email)) {
             printf("Email invalido. Intente nuevamente.\n");
             c->email[0] = '\0';
+        } else if (emailExiste(ARCH_CLIENTES, c->email)) {
+            printf("Ya existe un cliente con ese Email.\n");
+            c->email[0] = '\0';
         }
     } while (strlen(c->email) == 0);
+
 
     do {
         leerCampoObligatorio(c->dni, 10, "DNI");
@@ -163,23 +186,43 @@ void bajaCliente() {
     esperaTecla();
 }
 
+/** DARIO TURCHI **/
 void modificarCliente() {
     char dni[10];
     printf("\n--- Modificar Cliente ---\n");
     printf("Ingrese DNI: "); fflush(stdin); fgets(dni, 10, stdin); dni[strcspn(dni, "\n")] = 0;
 
-    FILE* f = fopen(ARCH_CLIENTES, "rb+");
-    if(!f) {
-        printf("Error al abrir archivo de clientes.\n");
-        esperaTecla(); return;
+    FILE* f = fopen(ARCH_CLIENTES, "rb+"); // Modo lectura/escritura. No crea si no existe.
+    if (!f) {
+            printf("Error al abrir archivo de clientes.\n");
+            esperaTecla();  // Evita continuar si no hay datos que modificar
+            return;         //sale de la funcion.
     }
+
     stCliente c;
     int encontrado = 0;
-    while(fread(&c, sizeof(stCliente), 1, f)) {
-        if(c.eliminado == 0 && strcmp(c.dni, dni) == 0) {
+
+     while (fread(&c, sizeof(stCliente), 1, f)) {
+        if (c.eliminado == 0 && strcmp(c.dni, dni) == 0) {
             printf("Modificar nombre (actual: %s): ", c.nombre); fflush(stdin); fgets(c.nombre, 30, stdin); c.nombre[strcspn(c.nombre, "\n")] = 0;
             printf("Modificar apellido (actual: %s): ", c.apellido); fflush(stdin); fgets(c.apellido, 30, stdin); c.apellido[strcspn(c.apellido, "\n")] = 0;
-            printf("Modificar email (actual: %s): ", c.email); fflush(stdin); fgets(c.email, 30, stdin); c.email[strcspn(c.email, "\n")] = 0;
+
+            // Validar nuevo email
+            do {
+                printf("Modificar email (actual: %s): ", c.email);
+                fflush(stdin);
+                fgets(c.email, 30, stdin);
+                c.email[strcspn(c.email, "\n")] = 0;
+
+                if (!emailValido(c.email)) {
+                    printf("Email invalido. Intente nuevamente.\n");
+                } else if (emailExiste(ARCH_CLIENTES, c.email) && strcmp(c.email, email) != 0) {
+                    printf("Ya existe un cliente con ese Email.\n");
+                } else {
+                    break;
+                }
+            } while (1);
+
             fseek(f, -sizeof(stCliente), SEEK_CUR);
             fwrite(&c, sizeof(stCliente), 1, f);
             printf("Datos modificados.\n");
@@ -187,6 +230,7 @@ void modificarCliente() {
             break;
         }
     }
+
     if(!encontrado) printf("No se encontró el cliente.\n");
     fclose(f);
     esperaTecla();
