@@ -208,7 +208,7 @@ void modificarCliente() {
             printf("Modificar apellido (actual: %s): ", c.apellido); fflush(stdin); fgets(c.apellido, 30, stdin); c.apellido[strcspn(c.apellido, "\n")] = 0;
 
             // Validar nuevo email
-            char emailOriginal[30];         //Antes de pedir el nuevo email, guardá el original en una variable auxiliar
+            char emailOriginal[30];         //Antes de pedir el nuevo email, guardá el original en una variable auxiliar emailOriginal
             strcpy(emailOriginal, c.email);  //Así no te bloquea si el cliente quiere dejar su mismo email (lo cual es válido).
 
             do {
