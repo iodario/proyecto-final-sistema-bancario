@@ -190,22 +190,6 @@ int emailValido(const char* email) {
     return (strchr(email, '@') != NULL);
 }
 
-int camposObligatoriosCompletos(stCliente c) {
-    if (strlen(c.nombre) == 0) {
-        printf("El nombre no puede estar vacío.\n");
-        return 0;
-    }
-    if (strlen(c.apellido) == 0) {
-        printf("El apellido no puede estar vacío.\n");
-        return 0;
-    }
-    if (strlen(c.email) == 0) {
-        printf("El email no puede estar vacío.\n");
-        return 0;
-    }
-    return 1; // Todos los campos obligatorios están completos
-}
-
 void leerCampoObligatorio(char* destino, int maxLen, const char* etiqueta) {
     //destino = dónde se va a guardar lo que el usuario escribe (el campo real del cliente)
     //maxLen = cantidad máxima de caracteres permitidos (por seguridad y tamaño de campo)
@@ -216,7 +200,7 @@ void leerCampoObligatorio(char* destino, int maxLen, const char* etiqueta) {
         destino[strcspn(destino, "\n")] = 0;
 
         if (strlen(destino) == 0) {
-            printf("El campo \"%s\" no puede estar vacío.\n", etiqueta);
+            printf("El campo \"%s\" no puede estar vacío. Intente nuevamente\n", etiqueta);
         }
         fflush(stdin); //limpia buffer de entrada
     } while (strlen(destino) == 0);
