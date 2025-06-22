@@ -208,6 +208,9 @@ void modificarCliente() {
             printf("Modificar apellido (actual: %s): ", c.apellido); fflush(stdin); fgets(c.apellido, 30, stdin); c.apellido[strcspn(c.apellido, "\n")] = 0;
 
             // Validar nuevo email
+            char emailOriginal[30];         //Antes de pedir el nuevo email, guardá el original en una variable auxiliar
+            strcpy(emailOriginal, c.email);  //Así no te bloquea si el cliente quiere dejar su mismo email (lo cual es válido).
+
             do {
                 printf("Modificar email (actual: %s): ", c.email);
                 fflush(stdin);
@@ -216,7 +219,9 @@ void modificarCliente() {
 
                 if (!emailValido(c.email)) {
                     printf("Email invalido. Intente nuevamente.\n");
-                } else if (emailExiste(ARCH_CLIENTES, c.email) && strcmp(c.email, email) != 0) {
+                } else if (emailExiste(ARCH_CLIENTES, c.email) && strcmp(c.email, emailOriginal) != 0) {
+
+
                     printf("Ya existe un cliente con ese Email.\n");
                 } else {
                     break;
