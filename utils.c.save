@@ -2,21 +2,31 @@
 #include "string.h"
 
 /*Contiene funciones de uso común que no pertenecen a un módulo específico
-    (como clientes o cuentas), pero que son reutilizadas en varios archivos .c del proyecto.
-
-    Incluye:
+    pero que son reutilizadas en varios archivos .c del proyecto. Incluye:
     Limpieza de buffer de entrada,
     Obtención de fecha actual (día, mes, año),
     Validaciones de strings numéricos y email valido,
     Generación del próximo ID para archivos binarios
 */
 
-/** DARIO TURCHI **/ 
-int emailValido(const char* email) {
-    return (strchr(email, '@') != NULL);
+
+/** DARIO TURCHI **/
+int emailValido(char email[]) {
+    int i = 0;
+    while (email[i] != '\0') {              //El carácter \0 representa un carácter nulo, en las cadenas de texto (char[]) marca el final de la cadena.      
+        if (email[i] == ' ') return 0;
+        i++;
+    }
+    char* arroba = strchr(email, '@');      //strchr() devuelve una dirección de memoria dentro de la misma cadena, es decir, un char*
+    if (arroba == NULL) return 0;
+
+    if (strchr(arroba + 1, '.') == NULL) return 0;  // Verifica que exista al menos un '.' después del '@'
+
+    return 1;
 }
 
-/** DARIO TURCHI **/ 
+
+/** DARIO TURCHI **/
 void limpiarBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);    //trabaja como si fuera fflush(stdin) pero tiene mejor portabilidad, seguridad y comportamiento
@@ -42,7 +52,7 @@ int diaActual() {
 
 // esNumerico verifica si una cadena contiene solo caracteres numéricos (dígitos 0–9).
 // Devuelve 1 si todos los caracteres son números, o 0 si encuentra alguno que no lo es.
-/** DARIO TURCHI **/ 
+/** DARIO TURCHI **/
 int esNumerico(const char* str) {
     for (int i = 0; str[i]; i++)
         if (str[i] < '0' || str[i] > '9') return 0;
@@ -50,7 +60,7 @@ int esNumerico(const char* str) {
 }
 
 // proximoId abre "clientes.dat", calcula su tamaño, divide por sizeof(stCliente), devuelve la cantidad de registros + 1, ese será el nuevo ID
-/** DARIO TURCHI **/ 
+/** DARIO TURCHI **/
 int proximoId(const char* archivo, size_t tam) {
     FILE* f = fopen(archivo, "rb");
     if (!f) return 1;

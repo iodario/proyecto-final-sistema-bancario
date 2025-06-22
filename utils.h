@@ -7,7 +7,7 @@
 #include <string.h>
 #define MAX_STR 100
 
-int emailValido(const char* email);
+int emailValido(char email[]);
 void limpiarBuffer();
 int anioActual();
 int mesActual();

@@ -2,19 +2,29 @@
 #include "string.h"
 
 /*Contiene funciones de uso común que no pertenecen a un módulo específico
-    (como clientes o cuentas), pero que son reutilizadas en varios archivos .c del proyecto.
-
-    Incluye:
+    pero que son reutilizadas en varios archivos .c del proyecto. Incluye:
     Limpieza de buffer de entrada,
     Obtención de fecha actual (día, mes, año),
     Validaciones de strings numéricos y email valido,
     Generación del próximo ID para archivos binarios
 */
 
+
 /** DARIO TURCHI **/
-int emailValido(const char* email) {
-    return (strchr(email, '@') != NULL);
+int emailValido(char email[]) {
+    int i = 0;
+    while (email[i] != '\0') {              //El carácter \0 representa un carácter nulo, en las cadenas de texto (char[]) marca el final de la cadena.
+        if (email[i] == ' ') return 0;
+        i++;
+    }
+    char* arroba = strchr(email, '@');      //strchr() devuelve una dirección de memoria dentro de la misma cadena, es decir, un char*
+    if (arroba == NULL) return 0;
+
+    if (strchr(arroba + 1, '.') == NULL) return 0;  // Verifica que exista al menos un '.' después del '@'
+
+    return 1;
 }
+
 
 /** DARIO TURCHI **/
 void limpiarBuffer() {
