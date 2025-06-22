@@ -22,7 +22,7 @@ void menuClientes() {
 }
 
 // =================== ( FUNCIONES CLIENTES ) ===================
-
+/** DARIO TURCHI **/
 void altaCliente() {
     stCliente c;
 
@@ -68,6 +68,7 @@ void altaCliente() {
     esperaTecla();
 }
 
+/** DARIO TURCHI **/
 int dniExiste(FILE* f, const char* dni) {
     rewind(f);  // Volver al inicio del archivo
     stCliente aux;
@@ -79,6 +80,7 @@ int dniExiste(FILE* f, const char* dni) {
     return 0; // No existe
 }
 
+/** DARIO TURCHI **/
 void leerCampoObligatorio(char* destino, int maxLen, const char* etiqueta) {
     //destino = dónde se va a guardar lo que el usuario escribe
     //maxLen = cantidad máxima de caracteres permitidos
@@ -95,7 +97,7 @@ void leerCampoObligatorio(char* destino, int maxLen, const char* etiqueta) {
     } while (strlen(destino) == 0);
 }
 
-
+/** DARIO TURCHI **/
 void leerDatosCliente(stCliente* c, FILE* f) {
     //toma todos los datos que el cliente ingresa, y llama a las funciones de validacion leerCampoObligatorio( ), emailValido( ) y dniExiste( )
 

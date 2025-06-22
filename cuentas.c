@@ -22,6 +22,7 @@ void menuCuentas() {
 }
 
 // ========================== FUNCIONES CUENTAS ==========================
+
 void altaCuenta() {
     stCuenta cta;
     FILE* f = fopen(ARCH_CLIENTES, "rb");

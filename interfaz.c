@@ -19,6 +19,7 @@ void beepMenu()        { Beep(700, 60); }
 void beepConfirm()     { Beep(900, 80); Beep(1200, 80); }
 
 // Imprime un texto centrado horizontalmente en la fila 'y' de la consola, Calcula el ancho de la consola y posiciona el texto justo en el medio
+/** DARIO TURCHI **/
 void printCenter(int y, const char* texto) {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     int columns;
