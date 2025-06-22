@@ -1,10 +1,18 @@
-#include "clientes.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include "gotoxy.h"
 #include <windows.h> // Para Sleep
+#include "interfaz.h"
+#include "utils.h"
+
+#include "clientes.h"
+#include "cuentas.h"
+
+
+
+
 
 // Prototipos de los submenús
 void abmClientes();

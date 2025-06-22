@@ -1,18 +1,15 @@
-#ifndef FUNCIONES_H
-#define FUNCIONES_H
+#ifndef CLIENTES_H
+#define CLIENTES_H
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <windows.h>
+#include "utils.h"
+#include "interfaz.h"
 
 #define ARCH_CLIENTES "clientes.dat"
-#define ARCH_CUENTAS "cuentas.dat"
-#define ARCH_MOVIMIENTOS "movimientos.dat"
-#define MAX_STR 100
 
-// ========== ESTRUCTURAS ==========
+// ========== ESTRUCTURAS CLIENTES ==========
+
 typedef struct {
     char calle[30];
     char nro[6];
@@ -34,85 +31,21 @@ typedef struct {
     int eliminado;
 } stCliente;
 
-typedef struct {
-    int id;
-    int idCliente;
-    char nroCuenta[24];
-    char cbu[24];
-    int tipoDeCuenta;
-    float costoMensual;
-    float saldo;
-    int eliminado;
-} stCuenta;
+// ========== PROTOTIPADO CLIENTES  ==========
 
-typedef struct {
-    int id;
-    int idCuenta;
-    char detalle[100];
-    float importe;
-    int anio;
-    int mes;
-    int dia;
-    int eliminado;
-} stMovimiento;
-
-// ========== FUNCIONES VISUALES ==========
-void limpiarPantalla();
-void gotoxy(int x, int y);
-void colorNormal();
-void colorTitulo();
-void colorMenu();
-void colorError();
-void colorDato();
-void colorLinea();
-void beepOk();
-void beepError();
-void beepMenu();
-void beepConfirm();
-void printMarco();
-void printCenter(int y, const char* texto);
-void printLinea(int y);
-void esperaTecla();
-
-// ========== FUNCIONES UTILITARIAS ==========
-void limpiarBuffer();
-int anioActual();
-int mesActual();
-int diaActual();
-int esNumerico(const char* str);
-int proximoId(const char* archivo, size_t tam);
-
-// ========== CLIENTES ==========
+void menuClientes();
 void altaCliente();
-int dniExiste(FILE* f, const char* dni);
+int  dniExiste(FILE* f, const char* dni);
+void leerCampoObligatorio(char* destino, int maxLen, const char* etiqueta) 
 void leerDatosCliente(stCliente* c, FILE* f);
 
 void bajaCliente();
+
 void modificarCliente();
 void consultarCliente();
 void listarClientes();
 void buscarClientePorApellidoODni();
 
-// ========== CUENTAS ==========
-void altaCuenta();
-void bajaCuenta();
-void modificarCuenta();
-void consultarCuenta();
-void listarCuentasPorCliente();
 
-// ========== MOVIMIENTOS ==========
-void altaMovimiento();
-void bajaMovimiento();
-void modificarMovimiento();
-void consultarMovimiento();
-void listarMovimientosPorCuenta();
-void listarMovimientosPorMes();
-void buscarMovimientosPorFecha();
-void cargarMovimientosAleatorios();
-
-// ========== MENUS ==========
-void menuClientes();
-void menuCuentas();
-void menuMovimientos();
 
 #endif
